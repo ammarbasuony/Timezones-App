@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-import configurations from "./config";
+import configurations from "./config.js";
 
 const connection = new Sequelize({
   dialect: configurations.db.dialect,

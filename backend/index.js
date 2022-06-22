@@ -3,10 +3,10 @@ import express from "express";
 import cors from "cors";
 
 // App Settings
-import configurations from "./config/config";
+import configurations from "./config/config.js";
 
 // Import Database Connection
-import db from "./config/db";
+import db from "./config/db.js";
 
 // Create App Instance
 const app = express();
@@ -22,6 +22,9 @@ db.authenticate()
   .catch((err) => console.log(err));
 
 // Routes
+import * as routes from "./routes/index.js";
+
+app.use("/api/users", routes.users);
 
 // Handle 404
 app.use((req, res, next) => {
