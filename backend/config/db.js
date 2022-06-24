@@ -11,4 +11,13 @@ const connection = new Sequelize({
   },
 });
 
+// const connection = new Sequelize("test", "root", "", {
+//   define: {
+//     charset: "utf8",
+//     collate: "utf8_general_ci",
+//   },
+//   host: "localhost",
+//   dialect: "mysql",
+// });
+
 export default connection;

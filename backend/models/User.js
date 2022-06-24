@@ -17,6 +17,10 @@ const User = (db, type) => {
       type: type.STRING,
       allowNull: false,
     },
+    role: {
+      type: type.INTEGER,
+      allowNull: false,
+    },
   });
 };
 

@@ -4,7 +4,12 @@ import bcrypt from "bcrypt";
 import { User } from "../models/index.js";
 
 // Functions
-import { isEmpty, isRecordExists, isValidEmail } from "../helpers/functions.js";
+import {
+  isEmpty,
+  isRecordExists,
+  isValidEmail,
+  isValidRole,
+} from "../helpers/functions.js";
 
 export const index = async (req, res) => {
   try {
@@ -33,12 +38,17 @@ export const addUser = async (req, res) => {
     if (await isRecordExists(User, { email: data.email }))
       return res
         .status(400)
-        .json({ success: false, message: "User is already exists" });
+        .json({ success: false, message: "User already exists" });
 
     if (!isValidEmail(data.email))
       return res
         .status(400)
-        .json({ success: false, message: "Email is not valid" });
+        .json({ success: false, message: "Email not valid" });
+
+    if (!isValidRole(data.role))
+      return res
+        .status(400)
+        .json({ success: false, message: "Role not valid" });
 
     // Generate Salt
     const salt = await bcrypt.genSalt();
@@ -50,11 +60,108 @@ export const addUser = async (req, res) => {
       name: data.name,
       email: data.email,
       password: hashedPass,
+      role: data.role,
     });
 
     delete user.dataValues.password;
 
+    res.status(201).json({ success: true, data: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not exists" });
+
+    // Delete Password From The Response
+    delete user.dataValues.password;
+
     res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not exists" });
+
+    // Check if the email already exists
+    const isEmailExists = await isRecordExists(User, { email: data.email });
+
+    if (isEmailExists && user.email !== data.email)
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exists" });
+
+    if (!isValidEmail(data.email))
+      return res
+        .status(400)
+        .json({ success: false, message: "Email not valid" });
+
+    if (!isValidRole(data.role))
+      return res
+        .status(400)
+        .json({ success: false, message: "Role not valid" });
+
+    if (data.password) {
+      const salt = await bcrypt.genSalt();
+      data.password = await bcrypt.hash(data.password, salt);
+    }
+
+    user.update(data);
+
+    // Delete Password From The Response
+    const { password, ...userData } = user.dataValues;
+
+    res.status(201).json({ success: true, data: userData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.destroy({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not exists" });
+      return;
+    }
+
+    res.json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
