@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "init": "node generateInitialUsers.js",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
