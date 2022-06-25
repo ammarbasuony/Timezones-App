@@ -26,6 +26,30 @@ export const index = async (req, res) => {
   }
 };
 
+export const getById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not exists" });
+
+    // Delete Password From The Response
+    delete user.dataValues.password;
+
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 export const addUser = async (req, res) => {
   const data = req.body;
 
@@ -66,31 +90,6 @@ export const addUser = async (req, res) => {
     delete user.dataValues.password;
 
     res.status(201).json({ success: true, data: user });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Server Error" });
-  }
-};
-
-export const getById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await User.findOne({
-      where: {
-        id,
-      },
-    });
-
-    if (!user)
-      return res
-        .status(404)
-        .json({ success: false, message: "User not exists" });
-
-    // Delete Password From The Response
-    delete user.dataValues.password;
-
-    res.json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }

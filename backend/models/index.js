@@ -2,10 +2,12 @@ import Sequelize, { DataTypes } from "sequelize";
 import db from "../config/db.js";
 
 // Import Schemas
-import UserSchema from "./user.js";
+import UserSchema from "./User.js";
+import TimezoneSchema from "./Timezone.js";
 
 // Create Models
 const User = UserSchema(db, DataTypes);
+const Timezone = TimezoneSchema(db, DataTypes);
 
 db.sync({ force: false })
   .then(() => {
@@ -15,4 +17,4 @@ db.sync({ force: false })
     console.log(err);
   });
 
-export { User };
+export { User, Timezone };
