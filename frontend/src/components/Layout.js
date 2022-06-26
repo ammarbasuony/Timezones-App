@@ -2,7 +2,6 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 // Components
-import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 const Layout = () => {
@@ -11,11 +10,7 @@ const Layout = () => {
       <div className="flex items-start justify-between">
         <Sidebar />
         <div className="flex flex-col w-full pl-0 md:px-4 md:space-y-4">
-          <Header title="Dashboard" />
-
-          <div className="container">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </div>
     </main>

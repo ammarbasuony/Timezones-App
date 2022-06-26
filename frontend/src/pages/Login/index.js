@@ -21,7 +21,7 @@ const Login = () => {
               <div className="flex flex-col mb-2">
                 <div className="flex relative">
                   <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
-                    {envelopeIcon}
+                    {envelopeIcon()}
                   </span>
                   <input
                     type="text"
@@ -33,7 +33,7 @@ const Login = () => {
               <div className="flex flex-col mb-6">
                 <div className="flex relative ">
                   <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
-                    {lockIcon}
+                    {lockIcon()}
                   </span>
                   <input
                     type="password"
