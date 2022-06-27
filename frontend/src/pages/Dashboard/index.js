@@ -12,23 +12,21 @@ const Dashboard = () => {
     <div>
       <Header title="Dashboard" />
 
-      <div className="container">
-        <div className="flex gap-4">
-          <Counter
-            title="Users"
-            todayCount={98}
-            totalCount={254}
-            icon={userIcon("text-blue-500", 20, 20)}
-            iconBg="bg-blue-200"
-          />
-          <Counter
-            title="Timezones"
-            todayCount={98}
-            totalCount={254}
-            icon={clockIcon("text-purple-500", 20, 20)}
-            iconBg="bg-purple-200"
-          />
-        </div>
+      <div className="lg:flex block gap-4">
+        <Counter
+          title="Users"
+          todayCount={98}
+          totalCount={254}
+          icon={userIcon("text-blue-500", 20, 20)}
+          iconBg="bg-blue-200"
+        />
+        <Counter
+          title="Timezones"
+          todayCount={98}
+          totalCount={254}
+          icon={clockIcon("text-purple-500", 20, 20)}
+          iconBg="bg-purple-200"
+        />
       </div>
     </div>
   );

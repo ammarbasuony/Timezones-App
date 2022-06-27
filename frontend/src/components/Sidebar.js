@@ -3,9 +3,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 // Assets
 import Logo from "../assets/icons/logo.svg";
-import { userIcon, clockIcon, dashboardIcon } from "../helpers/icons";
+import {
+  userIcon,
+  clockIcon,
+  dashboardIcon,
+  barsIcon,
+  closeIcon,
+} from "../helpers/icons";
 
 const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -28,7 +35,17 @@ const Sidebar = () => {
   ]);
 
   return (
-    <div className="h-screen hidden rounded-2xl lg:block shadow-lg relative w-80">
+    <div
+      className={`h-screen rounded-2xl lg:block transition-all fixed shadow-2xl lg:shadow-xl lg:relative lg:w-80 w-72 lg:left-0 z-50 ${
+        isOpen ? "left-0" : "-left-72"
+      }`}
+    >
+      <button
+        className={`lg:hidden block absolute transition-all ${isOpen ? "right-3" : "-right-24"} top-3 px-4 py-2 text-white bg-blue-500 rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? closeIcon("", 23, 23) : barsIcon("", 23, 23)}
+      </button>
       <div className="bg-white h-full rounded-2xl dark:bg-gray-700">
         <div className="flex items-center justify-center pt-6">
           <img src={Logo} alt="Timezones App" className="w-12" />
@@ -46,6 +63,7 @@ const Sidebar = () => {
                 href={page.path}
                 onClick={(e) => {
                   e.preventDefault();
+                  setIsOpen(false);
                   navigate(page.path);
                 }}
               >

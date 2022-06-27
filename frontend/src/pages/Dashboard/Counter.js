@@ -2,7 +2,7 @@ import React from "react";
 
 const Counter = ({ title, todayCount, totalCount, icon, iconBg }) => {
   return (
-    <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-800 w-full">
+    <div className="shadow-lg rounded-2xl p-4 bg-white dark:bg-gray-800 w-full mb-5">
       <div className="flex items-center">
         <span className={`rounded-xl relative p-3 ${iconBg}`}>{icon}</span>
         <p className="text-md text-gray-600 font-medium dark:text-white ml-2">{title}</p>

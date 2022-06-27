@@ -1,7 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Components
 import Header from "../../components/Header";
+
+// Assets
+import { leftArrowIcon } from "../../helpers/icons";
 
 const AddUser = () => {
   return (
@@ -9,7 +13,13 @@ const AddUser = () => {
       <Header title="Users" />
 
       <div className="pb-3">
-        <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
+        <div className="flex flex-row mb-1 sm:mb-0 items-center gap-4 w-full">
+          <Link
+            to="/users/"
+            className="flex items-center justify-center gap-2 px-4 py-2 text-base font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-purple-200"
+          >
+            {leftArrowIcon()} Back
+          </Link>
           <h2 className="text-2xl leading-tight text-slate-600 font-medium">
             Add Users
           </h2>

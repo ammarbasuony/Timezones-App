@@ -17,15 +17,15 @@ const Users = () => {
       <Header title="Users" />
 
       <div className="pb-3">
-        <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
+        <div className="lg:flex block flex-row mb-1 sm:mb-0 justify-between w-full">
           <Link
             to="/users/add"
-            className="flex items-center gap-2 px-4 py-2 text-base font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-purple-200"
+            className="flex items-center justify-center gap-2 px-4 py-2 text-base font-semibold text-white bg-slate-500 rounded-lg shadow-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-purple-200"
           >
             Add User {plusIcon()}
           </Link>
           <div className="text-end">
-            <form className="flex flex-col md:flex-row w-3/4 md:w-full max-w-sm md:space-x-3 space-y-3 md:space-y-0 justify-center">
+            <form className="flex flex-col lg:mt-0 mt-6 md:flex-row md:w-full max-w-sm md:space-x-3 space-y-3 md:space-y-0 justify-center">
               <div className="relative">
                 <input
                   type="text"
@@ -42,7 +42,7 @@ const Users = () => {
             </form>
           </div>
         </div>
-        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+        <div className="pt-4 overflow-x-auto scrollbar">
           <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
             <table className="min-w-full leading-normal">
               <thead>
