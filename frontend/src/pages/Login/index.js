@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 // Assets
 import Logo from "../../assets/icons/logo.svg";
-import { envelopeIcon, lockIcon } from "../../helpers/icons";
+import { envelopeIcon, lockIcon, spinnerIcon } from "../../helpers/icons";
 
 const Login = () => {
   return (

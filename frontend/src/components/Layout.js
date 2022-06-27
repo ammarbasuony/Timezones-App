@@ -9,7 +9,7 @@ const Layout = () => {
     <main className="bg-gray-100 dark:bg-gray-800 h-screen overflow-hidden relative p-4">
       <div className="flex items-start justify-between">
         <Sidebar />
-        <div className="flex flex-col w-full pl-0 md:px-4 md:space-y-4">
+        <div className="flex flex-col w-full h-screen overflow-auto pl-0 md:px-4 md:space-y-4">
           <Outlet />
         </div>
       </div>

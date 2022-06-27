@@ -11,7 +11,12 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+
 import Users from "./pages/Users";
+import AddUser from "./pages/Users/AddUser";
+
+import Timezones from "./pages/Timezones";
+import AddTimezone from "./pages/Timezones/AddTimezone";
 
 const Main = () => {
   return (
@@ -42,7 +47,14 @@ const Main = () => {
               </GuestRoute>
             }
           >
-            <Route path="users" element={<Users />} />
+            <Route path="users">
+              <Route path="add" element={<AddUser />} />
+              <Route index element={<Users />} />
+            </Route>
+            <Route path="timezones">
+              <Route path="add" element={<AddTimezone />} />
+              <Route index element={<Timezones />} />
+            </Route>
             <Route index element={<Dashboard />} />
           </Route>
         </Routes>
