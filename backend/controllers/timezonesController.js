@@ -1,12 +1,26 @@
 // Model
-import { Timezone } from "../models/index.js";
+import { Timezone, User } from "../models/index.js";
 
 // Function
-import { isEmpty } from "../helpers/functions.js";
+import { isEmpty, isRecordExists } from "../helpers/functions.js";
 
 export const index = async (req, res) => {
   try {
     const timezones = await Timezone.findAll();
+
+    res.json({ success: true, data: timezones });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getByUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const timezones = await Timezone.findAll({
+      where: { userId },
+    });
 
     res.json({ success: true, data: timezones });
   } catch (error) {
@@ -43,6 +57,11 @@ export const createTimezone = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "All attributes are required" });
+
+    if (!(await isRecordExists(User, { id: data.userId })))
+      return res
+        .status(400)
+        .json({ success: false, message: "User not exists" });
 
     const timezone = await Timezone.create(data);
 

@@ -9,6 +9,10 @@ import TimezoneSchema from "./Timezone.js";
 const User = UserSchema(db, DataTypes);
 const Timezone = TimezoneSchema(db, DataTypes);
 
+// Relation between Models
+User.hasMany(Timezone);
+Timezone.belongsTo(User);
+
 db.sync({ force: false })
   .then(() => {
     console.log("Tables Created");

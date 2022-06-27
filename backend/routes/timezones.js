@@ -3,6 +3,7 @@ const router = Router();
 
 import {
   index,
+  getByUser,
   getById,
   createTimezone,
   updateTimezone,
@@ -10,6 +11,7 @@ import {
 } from "../controllers/timezonesController.js";
 
 router.get("/", index);
+router.get("/user/:userId", getByUser);
 router.get("/:id", getById);
 router.post("/", createTimezone);
 router.put("/:id", updateTimezone);
