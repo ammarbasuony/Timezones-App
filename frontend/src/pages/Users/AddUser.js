@@ -1,13 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+// APIs
+import { addUser } from "../../api/users";
+
+// Actions
+import { saveUsersData } from "../../store/actions";
 
 // Components
 import Header from "../../components/Header";
 
 // Assets
-import { leftArrowIcon } from "../../helpers/icons";
+import { leftArrowIcon, spinnerIcon } from "../../helpers/icons";
 
 const AddUser = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { users } = useSelector((state) => state.dataReducer);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState(1);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    const createdAt = new Date();
+    const updatedAt = new Date();
+
+    e.preventDefault();
+    setLoading(true);
+    const user = {
+      name,
+      email,
+      role,
+      password,
+    };
+    const response = await addUser(user);
+    setLoading(false);
+    if (response.message) return toast.error(response.message);
+    user.createdAt = createdAt;
+    user.updatedAt = updatedAt;
+    dispatch(saveUsersData([...users, user]));
+    toast.success("User added successfully");
+    navigate("/users");
+  };
+
   return (
     <div>
       <Header title="Users" />
@@ -25,7 +65,10 @@ const AddUser = () => {
           </h2>
         </div>
 
-        <form className="my-4 mb-10 shadow-md rounded-lg">
+        <form
+          className="my-4 mb-10 shadow-md rounded-lg"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <div className="p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5">
             <div className="max-w-sm mx-auto md:w-full md:mx-0">
               <div className="inline-flex items-center space-x-4">
@@ -45,6 +88,7 @@ const AddUser = () => {
                       type="text"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Name"
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                 </div>
@@ -54,12 +98,16 @@ const AddUser = () => {
                       type="email"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Email"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <select className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                    <select
+                      onChange={(e) => setRole(parseInt(e.target.value))}
+                      className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    >
                       <option value="">Role</option>
                       <option value={2}>Admin</option>
                       <option value={1}>Manager</option>
@@ -81,6 +129,7 @@ const AddUser = () => {
                       type="password"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                 </div>
@@ -90,9 +139,9 @@ const AddUser = () => {
             <div className="w-full px-4 pb-4 ml-auto text-gray-500 md:w-1/3">
               <button
                 type="submit"
-                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                className="py-2 px-4 h-12 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
               >
-                Save
+                {loading ? spinnerIcon() : "Add User"}
               </button>
             </div>
           </div>

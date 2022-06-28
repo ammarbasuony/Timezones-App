@@ -1,13 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+// APIs
+import { addTimezone } from "../../api/timezones";
+
+// Actions
+import { saveTimezonesData } from "../../store/actions";
 
 // Components
 import Header from "../../components/Header";
 
 // Assets
-import { leftArrowIcon } from "../../helpers/icons";
+import { leftArrowIcon, spinnerIcon } from "../../helpers/icons";
 
 const AddTimezone = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { timezones } = useSelector((state) => state.dataReducer);
+  const {
+    authData: { id },
+  } = useSelector((state) => state.authReducer);
+  const [name, setName] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [gmtDiff, setGmtDiff] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    const createdAt = new Date();
+    const updatedAt = new Date();
+
+    e.preventDefault();
+    setLoading(true);
+    const timezone = {
+      name,
+      city_name: cityName,
+      gmt_diff: gmtDiff,
+      userId: id,
+    };
+    const response = await addTimezone(timezone);
+    setLoading(false);
+    if (response.message) return toast.error(response.message);
+    timezone.createdAt = createdAt;
+    timezone.updatedAt = updatedAt;
+    dispatch(saveTimezonesData([...timezones, timezone]));
+    toast.success("Timezone added successfully");
+    navigate("/timezones");
+  };
+
   return (
     <div>
       <Header title="Users" />
@@ -25,7 +67,10 @@ const AddTimezone = () => {
           </h2>
         </div>
 
-        <form className="my-4 mb-10 shadow-md rounded-lg">
+        <form
+          className="my-4 mb-10 shadow-md rounded-lg"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <div className="p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5">
             <div className="max-w-sm mx-auto md:w-full md:mx-0">
               <div className="inline-flex items-center space-x-4">
@@ -45,6 +90,7 @@ const AddTimezone = () => {
                       type="text"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Name"
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                 </div>
@@ -54,6 +100,7 @@ const AddTimezone = () => {
                       type="text"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="City Name"
+                      onChange={(e) => setCityName(e.target.value)}
                     />
                   </div>
                 </div>
@@ -71,6 +118,7 @@ const AddTimezone = () => {
                       type="number"
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Difference in hours"
+                      onChange={(e) => setGmtDiff(e.target.value)}
                     />
                   </div>
                 </div>
@@ -80,9 +128,9 @@ const AddTimezone = () => {
             <div className="w-full px-4 pb-4 ml-auto text-gray-500 md:w-1/3">
               <button
                 type="submit"
-                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                className="py-2 px-4 h-12 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
               >
-                Save
+                {loading ? spinnerIcon() : "Save"}
               </button>
             </div>
           </div>

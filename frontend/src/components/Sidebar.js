@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import cookies from "js-cookie";
+
+import properties from "../properties.json";
+
+// Actions
+import { resetState } from "../store/actions";
 
 // Assets
 import Logo from "../assets/icons/logo.svg";
@@ -14,25 +20,36 @@ import {
 } from "../helpers/icons";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
+  const {
+    authData: { role },
+  } = useSelector((state) => state.authReducer);
+  const [isOpen, setIsOpen] = useState(false);
 
   const pages = [
     {
       name: "Dashboard",
       icon: dashboardIcon("", 17, 17),
       path: "/",
+      roles: [
+        properties.roles.ADMIN,
+        properties.roles.MANAGER,
+        properties.roles.USER,
+      ],
     },
     {
       name: "Users",
       icon: userIcon("", 17, 17),
       path: "/users",
+      roles: [properties.roles.ADMIN, properties.roles.MANAGER],
     },
     {
       name: "Timezones",
       icon: clockIcon("", 17, 17),
       path: "/timezones",
+      roles: [properties.roles.ADMIN, properties.roles.USER],
     },
   ];
 
@@ -45,6 +62,7 @@ const Sidebar = () => {
   const logout = (e) => {
     e.preventDefault();
     cookies.remove("timezones_app_token");
+    dispatch(resetState());
     navigate("/login");
   };
 
@@ -68,21 +86,27 @@ const Sidebar = () => {
         </div>
         <nav className="mt-6">
           <div>
-            {pages.map((page) => (
-              <a
-                key={page.name}
-                className={`${
-                  page.path === pathname
-                    ? "text-blue-500 bg-gradient-to-r from-white to-blue-100 dark:from-gray-700 dark:to-gray-800 border-r-4 border-blue-500"
-                    : "text-gray-500 dark:text-gray-200 hover:text-blue-500"
-                } w-full font-thin uppercase flex items-center p-4 my-2 transition-colors duration-200 justify-start`}
-                href={page.path}
-                onClick={(e) => changePage(e, page.path)}
-              >
-                <span className="text-left">{page.icon}</span>
-                <span className="mx-4 text-sm font-normal">{page.name}</span>
-              </a>
-            ))}
+            {pages.map((page) => {
+              if (page.roles.includes(role)) {
+                return (
+                  <a
+                    key={page.name}
+                    className={`${
+                      page.path === pathname
+                        ? "text-blue-500 bg-gradient-to-r from-white to-blue-100 dark:from-gray-700 dark:to-gray-800 border-r-4 border-blue-500"
+                        : "text-gray-500 dark:text-gray-200 hover:text-blue-500"
+                    } w-full font-thin uppercase flex items-center p-4 my-2 transition-colors duration-200 justify-start`}
+                    href={page.path}
+                    onClick={(e) => changePage(e, page.path)}
+                  >
+                    <span className="text-left">{page.icon}</span>
+                    <span className="mx-4 text-sm font-normal">
+                      {page.name}
+                    </span>
+                  </a>
+                );
+              }
+            })}
             <a
               href="/"
               className="text-gray-500 dark:text-gray-200 hover:text-blue-500 w-full font-thin uppercase flex items-center p-4 my-2 transition-colors duration-200 justify-start"

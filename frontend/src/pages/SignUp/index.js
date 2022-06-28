@@ -1,11 +1,38 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+// APIs
+import { signup } from "../../api/auth";
 
 // Assets
 import Logo from "../../assets/icons/logo.svg";
-import { envelopeIcon, lockIcon, userIcon } from "../../helpers/icons";
+import {
+  envelopeIcon,
+  lockIcon,
+  userIcon,
+  spinnerIcon,
+} from "../../helpers/icons";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    if (!name || !email || !password)
+      return toast.error("Please fill all fields");
+    setLoading(true);
+    const signingUp = await signup(name, email, password);
+    setLoading(false);
+    if (signingUp.message) return toast.error(signingUp.message);
+    toast.success("Signup Successfully");
+    navigate("/login");
+  };
+
   return (
     <div className="bg-gray-100 dark:bg-gray-800 flex items-center justify-center h-screen">
       <div className="max-w-lg w-full">
@@ -17,7 +44,7 @@ const SignUp = () => {
             Create a New Account
           </div>
           <div className="mt-8">
-            <form action="#" autoComplete="off">
+            <form onSubmit={(e) => handleSignup(e)}>
               <div className="flex flex-col mb-2">
                 <div className="flex relative ">
                   <span className="rounded-l-md inline-flex  items-center px-3 border-t bg-white border-l border-b  border-gray-300 text-gray-500 shadow-sm text-sm">
@@ -27,6 +54,7 @@ const SignUp = () => {
                     type="text"
                     className="rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Your Name"
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
               </div>
@@ -39,6 +67,7 @@ const SignUp = () => {
                     type="text"
                     className="rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Your Email"
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
@@ -51,15 +80,16 @@ const SignUp = () => {
                     type="password"
                     className="rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Your Password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
               <div className="flex w-full">
                 <button
                   type="submit"
-                  className="py-2 px-4  bg-blue-500 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+                  className="py-2 px-4 h-12 bg-blue-500 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
                 >
-                  Sign Up
+                  {loading ? spinnerIcon() : "Sign Up"}
                 </button>
               </div>
             </form>
