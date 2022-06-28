@@ -37,7 +37,7 @@ const AddTimezone = () => {
     const timezone = {
       name,
       city_name: cityName,
-      gmt_diff: gmtDiff,
+      gmt_diff: parseInt(gmtDiff),
       userId: id,
     };
     const response = await addTimezone(timezone);

@@ -29,6 +29,7 @@ db.authenticate()
 import * as routes from "./routes/index.js";
 
 app.use("/api/auth", routes.auth);
+app.use("/api/home", verifyToken, routes.home);
 app.use(
   "/api/users",
   verifyToken,

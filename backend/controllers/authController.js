@@ -1,4 +1,8 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// App Settings
+import configurations from "../config/config.js";
 
 // Models
 import { User } from "../models/index.js";
@@ -75,3 +79,23 @@ export const login = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+export const getIdfromToken = async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const decoded = await jwt.verify(token, configurations.jwt_token_key);
+    const user = await User.findOne({ where: { id: decoded.id } });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+
+    delete user.dataValues.password;
+
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+}

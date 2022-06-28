@@ -28,17 +28,19 @@ const Timezones = () => {
   } = useSelector((state) => state.authReducer);
   const [name, setName] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   const fetchData = async () => {
-    if (!timezones.length) {
+    if (!timezones.length && !noData) {
       const response =
         role === 2 ? await allTimezones() : await getTimezoneByUser(id);
       if (response.message) return toast.error(response.message);
       setData(response.data);
       setAllData(response.data);
       dispatch(saveTimezonesData(response.data));
+      if (!response.data.length) setNoData(true);
     } else {
-      setData(timezones);
+      setData(timezones.slice(0, 5));
       setAllData(timezones);
     }
   };
@@ -95,7 +97,7 @@ const Timezones = () => {
             </form>
           </div>
         </div>
-        {Boolean(!data?.length) && !isSearching ? (
+        {Boolean(!data?.length) && !isSearching && !noData ? (
           <div className="mt-5">
             <Loading />
           </div>
@@ -129,6 +131,16 @@ const Timezones = () => {
                     >
                       Difference between browser’s time
                     </th>
+                    {data[0]?.user ? (
+                      <th
+                        scope="col"
+                        className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-medium"
+                      >
+                        Created By
+                      </th>
+                    ) : (
+                      ""
+                    )}
                     <th
                       scope="col"
                       className="px-5 py-3 bg-white border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-medium"

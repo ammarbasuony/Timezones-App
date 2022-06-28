@@ -25,16 +25,18 @@ const Users = () => {
   const { users } = useSelector((state) => state.dataReducer);
   const [name, setName] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   const fetchData = async () => {
-    if (!users.length) {
+    if (!users.length && !noData) {
       const response = await allUsers();
       if (response.message) return toast.error(response.message);
       setData(response.data);
       setAllData(response.data);
       dispatch(saveUsersData(response.data));
+      if (!response.data.length) setNoData(true);
     } else {
-      setData(users);
+      setData(users.slice(0, 5));
       setAllData(users);
     }
   };
@@ -91,7 +93,7 @@ const Users = () => {
             </form>
           </div>
         </div>
-        {Boolean(!data?.length) && !isSearching ? (
+        {Boolean(!data?.length) && !isSearching && !noData ? (
           <div className="mt-5">
             <Loading />
           </div>

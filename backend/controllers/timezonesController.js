@@ -1,4 +1,4 @@
-// Model
+// Models
 import { Timezone, User } from "../models/index.js";
 
 // Function
@@ -6,7 +6,9 @@ import { isEmpty, isRecordExists } from "../helpers/functions.js";
 
 export const index = async (req, res) => {
   try {
-    const timezones = await Timezone.findAll();
+    const timezones = await Timezone.findAll({
+      include: [User],
+    });
 
     res.json({ success: true, data: timezones });
   } catch (error) {
