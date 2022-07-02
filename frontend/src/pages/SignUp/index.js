@@ -25,6 +25,10 @@ const SignUp = () => {
     e.preventDefault();
     if (!name || !email || !password)
       return toast.error("Please fill all fields");
+
+    if (password.trim().length === 0)
+      return toast.error("Password is required");
+
     setLoading(true);
     const signingUp = await signup(name, email, password);
     setLoading(false);

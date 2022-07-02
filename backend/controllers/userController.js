@@ -74,6 +74,11 @@ export const addUser = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Role not valid" });
 
+    if (data.password.trim().length === 0)
+      return res
+        .status(400)
+        .json({ success: false, message: "Password is required" });
+
     // Generate Salt
     const salt = await bcrypt.genSalt();
 

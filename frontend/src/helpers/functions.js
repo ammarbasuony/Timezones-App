@@ -22,6 +22,6 @@ export const getDifference = (difference) => {
   const offset = difference;
   const hours = d.getUTCHours() + offset;
   const hour = hours % 12 || 12;
-  const browserHours = d.getHours();
-  return hour - browserHours;
+  const browserHours = d.getHours() % 12 || 12;
+  return Math.abs(hour - browserHours);
 };

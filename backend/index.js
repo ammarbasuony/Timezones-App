@@ -19,6 +19,7 @@ const port = configurations.port || 5000;
 // Configurations
 app.use(cors());
 app.use(express.json());
+app.enable("trust proxy");
 
 // Test DB Connection
 db.authenticate()

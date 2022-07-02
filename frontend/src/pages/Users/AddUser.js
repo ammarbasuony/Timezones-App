@@ -25,14 +25,18 @@ const AddUser = () => {
   const [role, setRole] = useState(1);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const lastItem = users[users.length - 1];
 
   const handleSubmit = async (e) => {
     const createdAt = new Date();
     const updatedAt = new Date();
 
+    if (password.trim().length === 0) return toast.error("Password is required");
+
     e.preventDefault();
     setLoading(true);
     const user = {
+      id: lastItem ? lastItem.id + 1 : 1,
       name,
       email,
       role,

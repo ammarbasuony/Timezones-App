@@ -20,9 +20,8 @@ const AddTimezone = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { timezones } = useSelector((state) => state.dataReducer);
-  const {
-    authData: { id },
-  } = useSelector((state) => state.authReducer);
+  const { authData } = useSelector((state) => state.authReducer);
+  const lastItem = timezones[timezones.length - 1];
   const [name, setName] = useState("");
   const [cityName, setCityName] = useState("");
   const [gmtDiff, setGmtDiff] = useState(0);
@@ -31,14 +30,17 @@ const AddTimezone = () => {
   const handleSubmit = async (e) => {
     const createdAt = new Date();
     const updatedAt = new Date();
+    if (gmtDiff < -12 || gmtDiff > 14) return toast.error("Invalid timezone");
 
     e.preventDefault();
     setLoading(true);
     const timezone = {
+      id: lastItem ? lastItem.id + 1 : 1,
       name,
       city_name: cityName,
       gmt_diff: parseInt(gmtDiff),
-      userId: id,
+      userId: authData.id,
+      user: authData,
     };
     const response = await addTimezone(timezone);
     setLoading(false);
@@ -116,6 +118,8 @@ const AddTimezone = () => {
                   <div className="relative">
                     <input
                       type="number"
+                      max={14}
+                      min={-12}
                       className="rounded-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                       placeholder="Difference in hours"
                       onChange={(e) => setGmtDiff(e.target.value)}

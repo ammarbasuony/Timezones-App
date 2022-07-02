@@ -31,6 +31,11 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Email not valid" });
 
+    if (data.password.trim().length === 0)
+      return res
+        .status(400)
+        .json({ success: false, message: "Password is required" });
+
     // Generate Salt
     const salt = await bcrypt.genSalt();
 
@@ -98,4 +103,4 @@ export const getIdfromToken = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
-}
+};
